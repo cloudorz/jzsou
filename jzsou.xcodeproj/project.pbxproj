@@ -1,0 +1,262 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		61E1CD8615143693004E5C7A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61E1CD8515143693004E5C7A /* UIKit.framework */; };
+		61E1CD8815143693004E5C7A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61E1CD8715143693004E5C7A /* Foundation.framework */; };
+		61E1CD8A15143693004E5C7A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61E1CD8915143693004E5C7A /* CoreGraphics.framework */; };
+		61E1CD9015143693004E5C7A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 61E1CD8E15143693004E5C7A /* InfoPlist.strings */; };
+		61E1CD9215143693004E5C7A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 61E1CD9115143693004E5C7A /* main.m */; };
+		61E1CD9615143693004E5C7A /* JZAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 61E1CD9515143693004E5C7A /* JZAppDelegate.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		61E1CD8115143693004E5C7A /* jzsou.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = jzsou.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		61E1CD8515143693004E5C7A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		61E1CD8715143693004E5C7A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		61E1CD8915143693004E5C7A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		61E1CD8D15143693004E5C7A /* jzsou-Info.plist */ = {isa = PBXFileReference; path = "jzsou-Info.plist"; sourceTree = "<group>"; };
+		61E1CD8F15143693004E5C7A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		61E1CD9115143693004E5C7A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		61E1CD9315143693004E5C7A /* jzsou-Prefix.pch */ = {isa = PBXFileReference; path = "jzsou-Prefix.pch"; sourceTree = "<group>"; };
+		61E1CD9415143693004E5C7A /* JZAppDelegate.h */ = {isa = PBXFileReference; path = JZAppDelegate.h; sourceTree = "<group>"; };
+		61E1CD9515143693004E5C7A /* JZAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JZAppDelegate.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		61E1CD7E15143693004E5C7A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				61E1CD8615143693004E5C7A /* UIKit.framework in Frameworks */,
+				61E1CD8815143693004E5C7A /* Foundation.framework in Frameworks */,
+				61E1CD8A15143693004E5C7A /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		61E1CD7615143692004E5C7A = {
+			isa = PBXGroup;
+			children = (
+				61E1CD8B15143693004E5C7A /* jzsou */,
+				61E1CD8415143693004E5C7A /* Frameworks */,
+				61E1CD8215143693004E5C7A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		61E1CD8215143693004E5C7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				61E1CD8115143693004E5C7A /* jzsou.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		61E1CD8415143693004E5C7A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				61E1CD8515143693004E5C7A /* UIKit.framework */,
+				61E1CD8715143693004E5C7A /* Foundation.framework */,
+				61E1CD8915143693004E5C7A /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		61E1CD8B15143693004E5C7A /* jzsou */ = {
+			isa = PBXGroup;
+			children = (
+				61E1CD9415143693004E5C7A /* JZAppDelegate.h */,
+				61E1CD9515143693004E5C7A /* JZAppDelegate.m */,
+				61E1CD8C15143693004E5C7A /* Supporting Files */,
+			);
+			path = jzsou;
+			sourceTree = "<group>";
+		};
+		61E1CD8C15143693004E5C7A /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				61E1CD8D15143693004E5C7A /* jzsou-Info.plist */,
+				61E1CD8E15143693004E5C7A /* InfoPlist.strings */,
+				61E1CD9115143693004E5C7A /* main.m */,
+				61E1CD9315143693004E5C7A /* jzsou-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		61E1CD8015143693004E5C7A /* jzsou */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 61E1CD9915143693004E5C7A /* Build configuration list for PBXNativeTarget "jzsou" */;
+			buildPhases = (
+				61E1CD7D15143693004E5C7A /* Sources */,
+				61E1CD7E15143693004E5C7A /* Frameworks */,
+				61E1CD7F15143693004E5C7A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = jzsou;
+			productName = jzsou;
+			productReference = 61E1CD8115143693004E5C7A /* jzsou.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		61E1CD7815143692004E5C7A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = JZ;
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = 61E1CD7B15143692004E5C7A /* Build configuration list for PBXProject "jzsou" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 61E1CD7615143692004E5C7A;
+			productRefGroup = 61E1CD8215143693004E5C7A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				61E1CD8015143693004E5C7A /* jzsou */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		61E1CD7F15143693004E5C7A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				61E1CD9015143693004E5C7A /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		61E1CD7D15143693004E5C7A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				61E1CD9215143693004E5C7A /* main.m in Sources */,
+				61E1CD9615143693004E5C7A /* JZAppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		61E1CD8E15143693004E5C7A /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				61E1CD8F15143693004E5C7A /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		61E1CD9715143693004E5C7A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		61E1CD9815143693004E5C7A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		61E1CD9A15143693004E5C7A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "jzsou/jzsou-Prefix.pch";
+				INFOPLIST_FILE = "jzsou/jzsou-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		61E1CD9B15143693004E5C7A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "jzsou/jzsou-Prefix.pch";
+				INFOPLIST_FILE = "jzsou/jzsou-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		61E1CD7B15143692004E5C7A /* Build configuration list for PBXProject "jzsou" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				61E1CD9715143693004E5C7A /* Debug */,
+				61E1CD9815143693004E5C7A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		61E1CD9915143693004E5C7A /* Build configuration list for PBXNativeTarget "jzsou" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				61E1CD9A15143693004E5C7A /* Debug */,
+				61E1CD9B15143693004E5C7A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 61E1CD7815143692004E5C7A /* Project object */;
+}
