@@ -1,5 +1,5 @@
 //
-//  JZAppDelegate.h
+//  JZNavigationBar.h
 //  jzsou
 //
 //  Created by Dai Cloud on 12-3-17.
@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface JZAppDelegate : UIResponder <UIApplicationDelegate>
+@interface JZNavigationBar : UINavigationBar
 
-@property (strong, nonatomic) IBOutlet UIWindow *window;
+- (void)drawRect:(CGRect)rect;
 
 @end

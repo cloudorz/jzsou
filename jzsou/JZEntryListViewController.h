@@ -1,5 +1,5 @@
 //
-//  JZAppDelegate.h
+//  JZEntryListViewController.h
 //  jzsou
 //
 //  Created by Dai Cloud on 12-3-17.
@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface JZAppDelegate : UIResponder <UIApplicationDelegate>
-
-@property (strong, nonatomic) IBOutlet UIWindow *window;
+@interface JZEntryListViewController : UITableViewController
 
 @end
