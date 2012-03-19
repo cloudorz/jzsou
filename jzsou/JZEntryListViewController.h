@@ -10,4 +10,9 @@
 
 @interface JZEntryListViewController : UITableViewController
 
+@property (strong, nonatomic) NSDictionary *cate, *curCity;
+@property (strong, nonatomic) NSString *etag, *q;
+@property (strong, nonatomic) NSMutableDictionary *curCollection;
+@property (strong, nonatomic) NSMutableArray *entries;
+
 @end

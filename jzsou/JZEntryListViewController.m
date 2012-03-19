@@ -9,12 +9,41 @@
 #import "JZEntryListViewController.h"
 #import "CustomBarButtonItem.h"
 #import "JZEntryDetailViewController.h"
+#import "ASIHTTPRequest.h"
+#import "Utils.h"
+#import "Config.h"
+#import "SBJson.h"
+#import "LocationController.h"
+#import "JZEntryCell.h"
+#import "NSString+URLEncoding.h"
 
 @interface JZEntryListViewController ()
-
+- (void)fetchEntryList:(NSString *) urlStr;
+- (void)fakeFetchEntryListWithLoc;
+- (void)fetchEntryListWithLoc;
+- (void)fetchEntryListWithTag;
+- (void)fetchEntryListWithQ;
 @end
 
 @implementation JZEntryListViewController
+
+@synthesize cate=_cate;
+@synthesize curCity=_curCity;
+@synthesize etag=_etag;
+@synthesize curCollection=_curCollection;
+@synthesize entries=_entries;
+@synthesize q=_q;
+
+- (void)dealloc
+{
+    [_cate release];
+    [_curCity release];
+    [_etag release];
+    [_entries release];
+    [_curCollection release];
+    [_q release];
+    [super dealloc];
+}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -42,6 +71,13 @@
                                               initConfirmBarButtonItemWithTarget:self 
                                                                           action:@selector(nearbyAction:)
                                                                            title:@"附近"];
+    self.navigationItem.title = [self.cate objectForKey:@"name"];
+    
+    // init table cell
+    self.tableView.backgroundColor = [UIColor colorWithRed:255/255.0 
+                                                     green:253/255.0 
+                                                      blue:251/255.0 
+                                                     alpha:1.0];
 }
 
 - (void)backAction:(id)sender
@@ -59,6 +95,16 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if (nil != self.cate){
+        [self fetchEntryListWithTag];
+    } else if (nil != self.q) {
+        [self fetchEntryListWithQ];
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -79,62 +125,27 @@
 {
 
     // Return the number of rows in the section.
-    return 5;
+    return [self.entries count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    JZEntryCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (cell == nil) {
         
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault 
+        cell = [[[JZEntryCell alloc] initWithStyle:UITableViewCellStyleDefault 
                                        reuseIdentifier:CellIdentifier] autorelease];
     } 
-    cell.textLabel.text = @"fuck my life";
+    
+    NSDictionary *entry = [self.entries objectAtIndex:indexPath.row];
+    cell.title.text =[entry objectForKey:@"title"];
+    cell.subTitle.text = [entry objectForKey:@"address"];
+    // may be distance
     
     return cell;
 }
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 #pragma mark - Table view delegate
 
@@ -149,5 +160,126 @@
      [detailViewController release];
      
 }
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 55;
+}
+
+#pragma mark - RESTful request
+- (void)fakeFetchEntryListWithLoc
+{
+    if ([CLLocationManager locationServicesEnabled]){
+
+        [[LocationController sharedInstance].locationManager startUpdatingLocation];
+        [self performSelector:@selector(fetchEntryListWithLoc) withObject:nil afterDelay:1.0];        
+        
+    }
+    
+}
+
+- (void)fetchEntryListWithLoc
+{
+    
+    CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
+    [[LocationController sharedInstance].locationManager stopUpdatingLocation];
+    
+    if (NO == [LocationController sharedInstance].allow){
+        return;
+    }
+    
+    NSString *url = [NSString stringWithFormat:@"%@/%@/s?q=position:%f,%f&st=%d&qn=%d", 
+                                       HOST,
+                                       [self.curCity objectForKey:@"label"],
+                                       curloc.latitude,
+                                       curloc.longitude, 
+                                       0, 20
+                                       ];
+    
+    [self fetchEntryList:url];
+}
+
+
+- (void)fetchEntryListWithTag
+{
+    
+    NSString *url = [NSString stringWithFormat:@"%@/%@/s?q=tag:%@&st=%d&qn=%d", 
+                                       HOST, 
+                                       [self.curCity objectForKey:@"label"],
+                                       [self.cate objectForKey:@"label"],
+                                       0, 20
+                                       ];
+    [self fetchEntryList:url];
+
+}
+
+- (void)fetchEntryListWithQ
+{
+    
+    NSString *url = [NSString stringWithFormat:@"%@/%@/s?q=key:%@&st=%d&qn=%d", 
+                                       HOST, 
+                                       [self.curCity objectForKey:@"label"],
+                                       [self.q URLEncodedString],
+                                       0, 20
+                                       ];
+    [self fetchEntryList:url];
+}
+
+- (void)fetchEntryList:(NSString *) urlStr
+{
+    
+
+    
+    NSURL *url = [NSURL URLWithString:urlStr];
+    
+    
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    if (nil != self.etag){
+        [request addRequestHeader:@"If-None-Match" value:self.etag];
+    }
+    //[request setValidatesSecureCertificate:NO];
+    [request setDelegate:self];
+    [request setDidFinishSelector:@selector(requestListDone:)];
+    [request setDidFailSelector:@selector(requestListWentWrong:)];
+    [request addRequestHeader:@"Authorization" value:TOKEN];
+    [request startAsynchronous];
+}
+
+
+- (void)requestListDone:(ASIHTTPRequest *)request
+{
+    NSInteger code = [request responseStatusCode];
+    if (200 == code){
+        NSString *body = [request responseString];
+        
+        //NSLog(@"body: %@", body);
+        // create the json parser 
+        NSMutableDictionary * collection = [body JSONValue];
+        
+        
+        self.curCollection = collection;
+        self.entries = [collection objectForKey:@"entries"];
+        self.etag = [[request responseHeaders] objectForKey:@"Etag"];
+        
+        // reload the tableview data
+        [self.tableView reloadData];
+        
+    } else if (304 == code){
+        // do nothing
+    } else{
+        [Utils warningNotification:@"获取数据失败"];
+        
+    }
+}
+
+- (void)requestListWentWrong:(ASIHTTPRequest *)request
+{
+    NSError *error = [request error];
+    NSLog(@"request loud list: %@", [error localizedDescription]);
+    [Utils warningNotification:@"网络链接错误"];
+    
+}
+
+#pragma mark - next here
 
 @end

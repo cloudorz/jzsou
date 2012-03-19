@@ -9,21 +9,63 @@
 #import "JZCateListViewController.h"
 #import "JZCityListViewController.h"
 #import "JZEntryListViewController.h"
+#import "JZListCateCell.h"
+#import "LocationController.h"
+#import "ASIHTTPRequest.h"
+#import "Utils.h"
+#import "Config.h"
 
 @interface JZCateListViewController ()
 -(void)setButtonTitle:(NSString *)title;
+-(void)fakeGetLocation;
 @end
 
 @implementation JZCateListViewController
 
 @synthesize searchBar=_searchBar;
 @synthesize button=_button;
+@synthesize currentCity=_currentCity;
 
 - (void)dealloc
 {
     [_searchBar release];
     [_button release];
+    [_listCates release];
+    [_dictCity release];
+    [_currentCity release];
+
     [super dealloc];
+}
+
+- (NSDictionary *)dictCity
+{
+    if (_dictCity == nil){
+        // read the plist loud category configure
+        NSString *myFile = [[NSBundle mainBundle] pathForResource:@"cities" ofType:@"plist"];
+        _dictCity = [[NSDictionary dictionaryWithContentsOfFile:myFile] retain];
+        
+    }
+    
+    return _dictCity;
+}
+
+- (NSArray *)listCates
+{
+    if (_listCates == nil){
+        // read the plist loud category configure
+        NSString *myFile = [[NSBundle mainBundle] pathForResource:@"cates" ofType:@"plist"];
+        NSDictionary *cates = [NSDictionary dictionaryWithContentsOfFile:myFile];
+        NSArray *sortedArray = [[cates allValues] sortedArrayUsingComparator:^NSComparisonResult(NSDictionary *d1, NSDictionary *d2){
+            int dnum1 = [[d1 objectForKey:@"no"] intValue];
+            int dnum2 = [[d2 objectForKey:@"no"] intValue];
+            return dnum1 > dnum2;
+        }];
+        
+        _listCates = [[NSArray alloc] initWithObjects: sortedArray, nil]; 
+        
+    }
+    
+    return _listCates;
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -79,17 +121,27 @@
     [titleView addSubview:button];
 
     self.navigationItem.titleView = titleView;
+    
+    // init table cell
+    self.tableView.backgroundColor = [UIColor colorWithRed:255/255.0 
+                                                     green:253/255.0 
+                                                      blue:251/255.0 
+                                                     alpha:1.0];
 
-    [self setButtonTitle:@"杭州湾"];
+//    [self setButtonTitle:[[self.dictCity objectForKey:@"hangzhou"] objectForKey:@"name"]];
+
 }
 
 -(void)buttonAction:(id)sender
 {
-
-    JZCityListViewController *jzcvc = [[JZCityListViewController alloc] initWithNibName:@"JZCityListViewController" bundle:nil];
-    [self presentModalViewController:jzcvc animated:YES];
-    [jzcvc release];
-
+    if (nil != self.currentCity){
+        JZCityListViewController *jzcvc = [[JZCityListViewController alloc] initWithNibName:@"JZCityListViewController" bundle:nil];
+        jzcvc.currentCity = self.currentCity;
+        jzcvc.cateListViewController = self;
+        [self presentModalViewController:jzcvc animated:YES];
+        [jzcvc release];
+        
+    }
 }
 
 - (void)viewDidUnload
@@ -97,6 +149,20 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    if (nil == self.currentCity){
+        [self fakeGetLocation];
+    } else {
+
+        [self setButtonTitle:[self.currentCity objectForKey:@"name"]];
+    }
+    
 }
 
 -(void)setButtonTitle:(NSString *)title
@@ -123,86 +189,116 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    return 1;
+    return [self.listCates count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return 3;
+    return [[self.listCates objectAtIndex:section] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    JZListCateCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault 
+        cell = [[[JZListCateCell alloc] initWithStyle:UITableViewCellStyleDefault 
                                       reuseIdentifier:CellIdentifier] autorelease];
     } 
     // Configure the cell...
-    cell.textLabel.text = @"fcuk this world";
+    NSDictionary *cate = [[self.listCates objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+    cell.name.text = [cate objectForKey:@"name"];
+    cell.logo.image = [UIImage imageNamed:[cate objectForKey:@"logo"]];
+    
     return cell;
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+    return 51;
 }
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Navigation logic may go here. Create and push another view controller.
-    
-     JZEntryListViewController *detailViewController = [[JZEntryListViewController alloc] initWithNibName:@"JZEntryListViewController" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     [detailViewController release];
+    if (nil != self.currentCity){
+        JZEntryListViewController *detailViewController = [[JZEntryListViewController alloc] initWithNibName:@"JZEntryListViewController" bundle:nil];
+         // ...
+         // Pass the selected object to the new view controller.
+        detailViewController.curCity = self.currentCity;
+        detailViewController.cate = [[self.listCates objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+        [self.navigationController pushViewController:detailViewController animated:YES];
+        [detailViewController release];
+    }
      
+}
+
+- (void)fakeGetLocation
+{
+    if ([CLLocationManager locationServicesEnabled]){
+        [[LocationController sharedInstance].locationManager startUpdatingLocation];
+        
+        [self performSelector:@selector(getLocation) withObject:nil afterDelay:1.0];
+    } else {
+        NSDictionary *city = [self.dictCity objectForKey:@"hangzhou"];
+        self.currentCity = city;
+        [self setButtonTitle:[self.currentCity objectForKey:@"name"]];
+    }   
+}
+
+- (void)getLocation
+{
+    
+    if (NO == [LocationController sharedInstance].allow){
+        NSDictionary *city = [self.dictCity objectForKey:@"hangzhou"];
+        self.currentCity = city;
+        [self setButtonTitle:[self.currentCity objectForKey:@"name"]];
+        return;
+    }
+    
+    // make json data for post
+    CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
+    [[LocationController sharedInstance].locationManager stopUpdatingLocation];
+    
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@/city/%f,%f", LOCHOST, curloc.latitude, curloc.longitude]];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    [request startSynchronous];
+    
+    NSDictionary *city = [self.dictCity objectForKey:@"hangzhou"];
+    NSError *error = [request error];
+    if (!error) {
+        if (200 == [request responseStatusCode]){
+            NSString *locLabel = [request responseString];
+            NSDictionary *maybeCity = [self.dictCity objectForKey:locLabel];
+            
+            if (![locLabel isEqualToString:@""] && maybeCity){
+                
+                city = maybeCity;
+
+            }
+        }
+    }
+    self.currentCity = city;
+    [self setButtonTitle:[self.currentCity objectForKey:@"name"]];
 }
 
 #pragma mark - search delegate
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
-    NSLog(@"search this world");
+
+    if (nil != self.currentCity){
+        JZEntryListViewController *detailViewController = [[JZEntryListViewController alloc] initWithNibName:@"JZEntryListViewController" bundle:nil];
+
+        detailViewController.curCity = self.currentCity;
+        detailViewController.q = self.searchBar.text;
+        [self.navigationController pushViewController:detailViewController animated:YES];
+        [detailViewController release];
+    }
     
 }
 
@@ -210,6 +306,15 @@
 {
 
     self.searchBar.showsCancelButton = YES;
+    // change the title
+    for (UIView *subview in [self.searchBar subviews]) {
+        CGRect bouds = [subview bounds];
+        CGSize size = bouds.size;
+        
+        if (size.width == 48 && size.height == 30){
+            [subview performSelector:@selector(setTitle:) withObject:@"取消"];
+        }
+    }
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
