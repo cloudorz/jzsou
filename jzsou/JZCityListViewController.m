@@ -86,11 +86,6 @@
 {
     [super viewDidLoad];
 
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     self.myNavigationItem.leftBarButtonItem = [[[CustomBarButtonItem alloc] 
                                                 initBackBarButtonItemWithTarget:self 
                                                 action:@selector(backAction:) 
@@ -147,6 +142,7 @@
                                        reuseIdentifier:CellIdentifier] autorelease];
         cell.selectionStyle = UITableViewCellSelectionStyleGray;
         cell.backgroundColor = [UIColor whiteColor];
+        cell.textLabel.textAlignment = UITextAlignmentCenter;
 
     } 
     // Configure the cell...
@@ -170,7 +166,7 @@
     if ([CLLocationManager locationServicesEnabled]){
         [[LocationController sharedInstance].locationManager startUpdatingLocation];
         
-        [self performSelector:@selector(getLocation) withObject:nil afterDelay:1.0];
+        [self performSelector:@selector(getLocation) withObject:nil afterDelay:1.5];
     }  
 }
 

@@ -23,6 +23,8 @@
 - (void)fetchEntryListWithLoc;
 - (void)fetchEntryListWithTag;
 - (void)fetchEntryListWithQ;
+- (void)fetchNextLoudList;
+- (void)fetchEntryListWithQOrTag;
 @end
 
 @implementation JZEntryListViewController
@@ -33,6 +35,7 @@
 @synthesize curCollection=_curCollection;
 @synthesize entries=_entries;
 @synthesize q=_q;
+@synthesize canLoad=_canLoad;
 
 - (void)dealloc
 {
@@ -58,26 +61,30 @@
 {
     [super viewDidLoad];
 
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    self.navigationItem.leftBarButtonItem = [[CustomBarButtonItem alloc] 
+
+    self.navigationItem.leftBarButtonItem = [[[CustomBarButtonItem alloc] 
                                              initBackBarButtonItemWithTarget:self 
                                                                       action:@selector(backAction:) 
-                                                                       title:@"返回"];
-    self.navigationItem.rightBarButtonItem = [[CustomBarButtonItem alloc] 
-                                              initConfirmBarButtonItemWithTarget:self 
-                                                                          action:@selector(nearbyAction:)
-                                                                           title:@"附近"];
+                                                                       title:@"返回"] autorelease];
     self.navigationItem.title = [self.cate objectForKey:@"name"];
     
-    // init table cell
-    self.tableView.backgroundColor = [UIColor colorWithRed:255/255.0 
-                                                     green:253/255.0 
-                                                      blue:251/255.0 
-                                                     alpha:1.0];
+    if (YES == [LocationController sharedInstance].allow){
+        NSLog(@"fuck this world");
+        self.navigationItem.rightBarButtonItem = [[[CustomBarButtonItem alloc] 
+                                                   initConfirmBarButtonItemWithTarget:self 
+                                                   action:@selector(allAction:)
+                                                    title:@"全城"] autorelease];
+        // init list
+        [self fakeFetchEntryListWithLoc];
+    } else {
+        self.navigationItem.rightBarButtonItem = nil;
+        // init list
+        [self fetchEntryListWithQOrTag];
+    }
+
+    
+    // init can load next entries list
+    self.canLoad = YES;
 }
 
 - (void)backAction:(id)sender
@@ -85,9 +92,11 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)nearbyAction:(id)sender
+- (void)allAction:(id)sender
 {
-    NSLog(@"near by entries");
+    // init list
+    [self fetchEntryListWithQOrTag];
+    
 }
 
 - (void)viewDidUnload
@@ -95,16 +104,6 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    if (nil != self.cate){
-        [self fetchEntryListWithTag];
-    } else if (nil != self.q) {
-        [self fetchEntryListWithQ];
-    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -153,11 +152,12 @@
 {
     // Navigation logic may go here. Create and push another view controller.
     
-     JZEntryDetailViewController *detailViewController = [[JZEntryDetailViewController alloc] initWithNibName:@"JZEntryDetailViewController" bundle:nil];
+    JZEntryDetailViewController *detailViewController = [[JZEntryDetailViewController alloc] initWithNibName:@"JZEntryDetailViewController" bundle:nil];
      // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     [detailViewController release];
+    NSMutableDictionary *entry = [self.entries objectAtIndex:indexPath.row];
+    detailViewController.entry = entry;
+    [self.navigationController pushViewController:detailViewController animated:YES];
+    [detailViewController release];
      
 }
 
@@ -166,37 +166,78 @@
     return 55;
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.row == self.entries.count - 1 &&
+        nil != self.entries &&
+        [self.curCollection objectForKey:@"next"] &&
+        self.canLoad) {
+        
+        [self fetchNextLoudList];
+    }
+}
+
 #pragma mark - RESTful request
 - (void)fakeFetchEntryListWithLoc
 {
     if ([CLLocationManager locationServicesEnabled]){
 
         [[LocationController sharedInstance].locationManager startUpdatingLocation];
-        [self performSelector:@selector(fetchEntryListWithLoc) withObject:nil afterDelay:1.0];        
+        [self performSelector:@selector(fetchEntryListWithLoc) withObject:nil afterDelay:1.5];        
         
+    } else {
+        [self fetchEntryListWithQOrTag];
     }
     
+}
+
+-(void)fetchEntryListWithQOrTag
+{
+    if (nil != self.cate){
+        [self fetchEntryListWithTag];
+    } else if (nil != self.q) {
+        [self fetchEntryListWithQ];
+    }
 }
 
 - (void)fetchEntryListWithLoc
 {
     
-    CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
-    [[LocationController sharedInstance].locationManager stopUpdatingLocation];
-    
     if (NO == [LocationController sharedInstance].allow){
+        [self fetchEntryListWithQOrTag];
         return;
     }
     
-    NSString *url = [NSString stringWithFormat:@"%@/%@/s?q=position:%f,%f&st=%d&qn=%d", 
-                                       HOST,
-                                       [self.curCity objectForKey:@"label"],
-                                       curloc.latitude,
-                                       curloc.longitude, 
-                                       0, 20
-                                       ];
+    CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
+    [[LocationController sharedInstance].locationManager stopUpdatingLocation];
     
-    [self fetchEntryList:url];
+
+    
+    // init list
+    NSString *url=nil;
+    if (nil != self.cate){
+
+        url = [NSString stringWithFormat:@"%@/%@/s?q=tag:%@&pos=%f,%f&st=%d&qn=%d", 
+                         HOST, 
+                         [self.curCity objectForKey:@"label"],
+                         [self.cate objectForKey:@"label"],
+                         curloc.latitude, curloc.longitude,
+                         0, 20
+                         ];
+    } else if (nil != self.q) {
+        url = [NSString stringWithFormat:@"%@/%@/s?q=key:%@&pos=%f,%f&st=%d&qn=%d", 
+                         HOST, 
+                         [self.curCity objectForKey:@"label"],
+                         [self.q URLEncodedString],
+                         curloc.latitude, curloc.longitude,
+                         0, 20
+                         ];
+    }
+    
+    if (url != nil) {
+        [self fetchEntryList:url];
+    }
+    
 }
 
 
@@ -281,5 +322,47 @@
 }
 
 #pragma mark - next here
+- (void)fetchNextLoudList
+{
+    
+    self.canLoad = NO;
+    
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[self.curCollection objectForKey:@"next"]]];
+    [request setDelegate:self];
+    [request setDidFinishSelector:@selector(requestNextListDone:)];
+    [request setDidFailSelector:@selector(requestNextListWentWrong:)];
+    [request addRequestHeader:@"Authorization" value:TOKEN];
+    [request startAsynchronous];
+    
+}
+
+- (void)requestNextListDone:(ASIHTTPRequest *)request
+{
+    NSInteger code = [request responseStatusCode];
+    if (200 == code){
+        
+        NSString *body = [request responseString];
+        // create the json parser 
+        NSMutableDictionary *collection = [body JSONValue];
+        
+        self.curCollection = collection;
+        [self.entries addObjectsFromArray:[collection objectForKey:@"entries"]];
+        
+        // reload the tableview data
+        [self.tableView reloadData];
+        
+    }
+    
+    self.canLoad = YES;
+    
+}
+
+- (void)requestNextListWentWrong:(ASIHTTPRequest *)request
+{
+    NSError *error = [request error];
+    NSLog(@"request next loud list: %@", [error localizedDescription]);
+    self.canLoad = YES;
+    
+}
 
 @end

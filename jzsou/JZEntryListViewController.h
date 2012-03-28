@@ -14,5 +14,6 @@
 @property (strong, nonatomic) NSString *etag, *q;
 @property (strong, nonatomic) NSMutableDictionary *curCollection;
 @property (strong, nonatomic) NSMutableArray *entries;
+@property (assign, nonatomic) BOOL canLoad;
 
 @end

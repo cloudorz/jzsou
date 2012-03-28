@@ -81,12 +81,6 @@
 {
     [super viewDidLoad];
 
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    // search bar config
     [self.tableView.tableHeaderView addSubview:self.searchBar];
     UISearchBar *searchBar = [[[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)] autorelease];
     searchBar.delegate = self;
@@ -123,9 +117,9 @@
     self.navigationItem.titleView = titleView;
     
     // init table cell
-    self.tableView.backgroundColor = [UIColor colorWithRed:255/255.0 
-                                                     green:253/255.0 
-                                                      blue:251/255.0 
+    self.tableView.backgroundColor = [UIColor colorWithRed:253/255.0 
+                                                     green:251/255.0 
+                                                      blue:249/255.0 
                                                      alpha:1.0];
 
 //    [self setButtonTitle:[[self.dictCity objectForKey:@"hangzhou"] objectForKey:@"name"]];
@@ -242,7 +236,7 @@
     if ([CLLocationManager locationServicesEnabled]){
         [[LocationController sharedInstance].locationManager startUpdatingLocation];
         
-        [self performSelector:@selector(getLocation) withObject:nil afterDelay:1.0];
+        [self performSelector:@selector(getLocation) withObject:nil afterDelay:1.5];
     } else {
         NSDictionary *city = [self.dictCity objectForKey:@"hangzhou"];
         self.currentCity = city;

@@ -7,7 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MessageUI/MessageUI.h>
 
-@interface JZEntryDetailViewController : UIViewController
+@interface JZEntryDetailViewController : UIViewController <MFMessageComposeViewControllerDelegate>
+
+@property (strong, nonatomic) IBOutlet UILabel *address, *worktime, *contact, *phone, *nameTitle;
+@property (strong, nonatomic) IBOutlet UITextView *project, *area, *desc;
+@property (strong, nonatomic) IBOutlet UIButton *smsButton, *callButton;
+@property (strong, nonatomic) NSMutableDictionary *entry;
 
 @end

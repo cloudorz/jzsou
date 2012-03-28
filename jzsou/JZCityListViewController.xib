@@ -62,7 +62,7 @@
 						<reference key="NSWindow"/>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">2</int>
-							<bytes key="NSRGB">MSAwLjk5MjE1Njg2MjcgMC45ODQzMTM3MjU1AA</bytes>
+							<bytes key="NSRGB">MC45OTIxNTY4NjI3IDAuOTg0MzEzNzI1NSAwLjk3NjQ3MDU4ODIAA</bytes>
 						</object>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
