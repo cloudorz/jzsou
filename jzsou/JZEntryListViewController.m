@@ -16,6 +16,7 @@
 #import "LocationController.h"
 #import "JZEntryCell.h"
 #import "NSString+URLEncoding.h"
+#import "UIViewController+msg.h"
 
 @interface JZEntryListViewController ()
 - (void)fetchEntryList:(NSString *) urlStr;
@@ -66,22 +67,22 @@
                                              initBackBarButtonItemWithTarget:self 
                                                                       action:@selector(backAction:) 
                                                                        title:@"返回"] autorelease];
-    self.navigationItem.title = [self.cate objectForKey:@"name"];
     
-    if (YES == [LocationController sharedInstance].allow){
-        NSLog(@"fuck this world");
-        self.navigationItem.rightBarButtonItem = [[[CustomBarButtonItem alloc] 
-                                                   initConfirmBarButtonItemWithTarget:self 
-                                                   action:@selector(allAction:)
-                                                    title:@"全城"] autorelease];
-        // init list
-        [self fakeFetchEntryListWithLoc];
-    } else {
-        self.navigationItem.rightBarButtonItem = nil;
-        // init list
-        [self fetchEntryListWithQOrTag];
-    }
+    self.navigationItem.rightBarButtonItem = [[[CustomBarButtonItem alloc] 
+                                               initConfirmBarButtonItemWithTarget:self 
+                                               action:@selector(nearbyAction:)
+                                               title:@"附近"] autorelease];
+    
+    self.navigationItem.title = [self.cate objectForKey:@"name"];
 
+    
+    if (NO == [LocationController sharedInstance].allow){
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+
+    }
+    
+    // init list
+    [self fetchEntryListWithQOrTag];
     
     // init can load next entries list
     self.canLoad = YES;
@@ -92,11 +93,9 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)allAction:(id)sender
+- (void)nearbyAction:(id)sender
 {
-    // init list
-    [self fetchEntryListWithQOrTag];
-    
+    [self fakeFetchEntryListWithLoc];
 }
 
 - (void)viewDidUnload
@@ -304,6 +303,11 @@
         
         // reload the tableview data
         [self.tableView reloadData];
+
+        if ([[collection objectForKey:@"total"] intValue] == 0) {
+            [self fadeInMsgWithText:@"无信息" rect:CGRectMake(0, 0, 80, 70)];
+        }
+        
         
     } else if (304 == code){
         // do nothing
