@@ -12,6 +12,7 @@
 #import "Utils.h"
 #import "Config.h"
 #import "ASIHTTPRequest.h"
+#import "SBJson.h"
 
 @interface JZCityListViewController ()
 
@@ -22,7 +23,6 @@
 @synthesize tableView=_tableView;
 @synthesize navigationBar=_navigationBar;
 @synthesize myNavigationItem=_myNavigationItem;
-@synthesize currentCity=_currentCity;
 @synthesize curLocCell=_curLocCell;
 @synthesize cateListViewController=_cateListViewController;
 
@@ -33,7 +33,6 @@
     [_myNavigationItem release];
     [_listCity release];
     [_dictCity release];
-    [_currentCity release];
     [_cateListViewController release];
     [super dealloc];
 }
@@ -167,42 +166,40 @@
         [[LocationController sharedInstance].locationManager startUpdatingLocation];
         
         [self performSelector:@selector(getLocation) withObject:nil afterDelay:1.5];
-    }  
+    } else {
+        [self getLocation];
+    }   
 }
 
 - (void)getLocation
 {
-    
+    NSURL *url;
     if (NO == [LocationController sharedInstance].allow){
-        return;
+        url = [NSURL URLWithString:[NSString stringWithFormat: @"%@/city/", HOST]];
+    } else {
+        // make json data for post
+        CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
+        [[LocationController sharedInstance].locationManager stopUpdatingLocation];
+        url = [NSURL URLWithString:[NSString stringWithFormat: @"%@/city/%f,%f", HOST, curloc.latitude, curloc.longitude]];
     }
     
-    // make json data for post
-    CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
-    [[LocationController sharedInstance].locationManager stopUpdatingLocation];
-    
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@/city/%f,%f", LOCHOST, curloc.latitude, curloc.longitude]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    [request addRequestHeader:@"Authorization" value:TOKEN];
     [request startSynchronous];
     
     NSError *error = [request error];
     if (!error) {
         if (200 == [request responseStatusCode]){
-            NSString *locLabel = [request responseString];
-            NSDictionary *maybeCity = [self.dictCity objectForKey:locLabel];
-
-            if (![locLabel isEqualToString:@""] && maybeCity){
-
-
-                [[self.listCity objectAtIndex:0] setObject:maybeCity atIndex:0];
-                [self.tableView reloadData];
-                
-            }
+            NSMutableDictionary *local = [[request responseString]  JSONValue];
+ 
+            [[self.listCity objectAtIndex:0] setObject:local atIndex:0];
+            [self.tableView reloadData];
+            
+            
         }
     }
-    
 }
+
 
 #pragma mark - Table view delegate
 

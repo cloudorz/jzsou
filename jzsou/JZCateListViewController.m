@@ -14,6 +14,7 @@
 #import "ASIHTTPRequest.h"
 #import "Utils.h"
 #import "Config.h"
+#import "SBJson.h"
 
 @interface JZCateListViewController ()
 -(void)setButtonTitle:(NSString *)title;
@@ -130,7 +131,6 @@
 {
     if (nil != self.currentCity){
         JZCityListViewController *jzcvc = [[JZCityListViewController alloc] initWithNibName:@"JZCityListViewController" bundle:nil];
-        jzcvc.currentCity = self.currentCity;
         jzcvc.cateListViewController = self;
         [self presentModalViewController:jzcvc animated:YES];
         [jzcvc release];
@@ -238,43 +238,33 @@
         
         [self performSelector:@selector(getLocation) withObject:nil afterDelay:1.5];
     } else {
-        NSDictionary *city = [self.dictCity objectForKey:@"hangzhou"];
-        self.currentCity = city;
-        [self setButtonTitle:[self.currentCity objectForKey:@"name"]];
+        [self getLocation];
     }   
 }
 
 - (void)getLocation
 {
-    
+    NSURL *url;
     if (NO == [LocationController sharedInstance].allow){
-        NSDictionary *city = [self.dictCity objectForKey:@"hangzhou"];
-        self.currentCity = city;
-        [self setButtonTitle:[self.currentCity objectForKey:@"name"]];
-        return;
+        url = [NSURL URLWithString:[NSString stringWithFormat: @"%@/city/", HOST]];
+    } else {
+        // make json data for post
+        CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
+        [[LocationController sharedInstance].locationManager stopUpdatingLocation];
+        url = [NSURL URLWithString:[NSString stringWithFormat: @"%@/city/%f,%f", HOST, curloc.latitude, curloc.longitude]];
     }
-    
-    // make json data for post
-    CLLocationCoordinate2D curloc = [LocationController sharedInstance].location.coordinate;
-    [[LocationController sharedInstance].locationManager stopUpdatingLocation];
-    
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@/city/%f,%f", LOCHOST, curloc.latitude, curloc.longitude]];
+   
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    [request addRequestHeader:@"Authorization" value:TOKEN];
     [request startSynchronous];
     
     NSDictionary *city = [self.dictCity objectForKey:@"hangzhou"];
     NSError *error = [request error];
     if (!error) {
         if (200 == [request responseStatusCode]){
-            NSString *locLabel = [request responseString];
-            NSDictionary *maybeCity = [self.dictCity objectForKey:locLabel];
-            
-            if (![locLabel isEqualToString:@""] && maybeCity){
-                
-                city = maybeCity;
+            NSMutableDictionary *local = [[request responseString]  JSONValue];
+            city = local;
 
-            }
         }
     }
     self.currentCity = city;

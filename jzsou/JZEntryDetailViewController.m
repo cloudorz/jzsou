@@ -79,7 +79,24 @@
     self.area.text = [[self.entry objectForKey:@"serviceareas"] componentsJoinedByString:@" "];
     self.desc.text = [self.entry objectForKey:@"desc"];
     self.contact.text = [self.entry objectForKey:@"linkman"];
-    self.phone.text = [[self.entry objectForKey:@"contracts"] objectAtIndex:0];
+
+    NSMutableArray *contacts = [self.entry objectForKey:@"contracts"];
+    for (NSString *tel in contacts) {
+        if (![self testCellPhoneNumber:tel]) {
+            self.phone.text = tel;
+            break;
+        }
+    }
+    
+    if ([self.phone.text isEqualToString:@""]) {
+        if ([contacts count] >= 3) {
+            self.phone.text = [[self.entry objectForKey:@"contracts"] objectAtIndex:1];
+        } else {
+            self.phone.text = [[self.entry objectForKey:@"contracts"] objectAtIndex:0];
+
+        }
+
+    }
     
     // init the buttons
     UIDevice *device = [UIDevice currentDevice];

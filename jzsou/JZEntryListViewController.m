@@ -305,7 +305,7 @@
         [self.tableView reloadData];
 
         if ([[collection objectForKey:@"total"] intValue] == 0) {
-            [self fadeInMsgWithText:@"无信息" rect:CGRectMake(0, 0, 80, 70)];
+            [self fadeInMsgWithText:@"你所在城市暂无此类信息" rect:CGRectMake(0, 0, 160, 70)];
         }
         
         
