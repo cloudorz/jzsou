@@ -17,6 +17,7 @@
 #import "JZEntryCell.h"
 #import "NSString+URLEncoding.h"
 #import "UIViewController+msg.h"
+#import "GANTracker.h"
 
 @interface JZEntryListViewController ()
 - (void)fetchEntryList:(NSString *) urlStr;
@@ -157,6 +158,12 @@
     detailViewController.entry = entry;
     [self.navigationController pushViewController:detailViewController animated:YES];
     [detailViewController release];
+    
+    NSError *error;
+    if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/entry_%@", [entry objectForKey:@"id"]]
+                                         withError:&error]) {
+        NSLog(@"%@", [error description]);
+    }
      
 }
 
@@ -315,6 +322,8 @@
         [Utils warningNotification:@"获取数据失败"];
         
     }
+    
+
 }
 
 - (void)requestListWentWrong:(ASIHTTPRequest *)request

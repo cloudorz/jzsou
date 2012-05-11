@@ -9,6 +9,7 @@
 #import "JZEntryDetailViewController.h"
 #import "CustomBarButtonItem.h"
 #import "Utils.h"
+#import "GANTracker.h"
 
 @interface JZEntryDetailViewController ()
 
@@ -133,6 +134,15 @@
 
     UIDevice *device = [UIDevice currentDevice];
     if ([[device model] isEqualToString:@"iPhone"]) {
+        NSError *error;
+        if (![[GANTracker sharedTracker] trackEvent:@"phone_call"
+                                             action:@"call_some_one"
+                                              label:@"call"
+                                              value:-1
+                                          withError:&error]) {
+            NSLog(@"Error:%@", [error description]);
+        }
+        
         NSURL *callURL = [NSURL URLWithString:[NSString stringWithFormat:@"tel:%@", self.phone.text]];
         
         [[UIApplication sharedApplication] openURL:callURL];
@@ -183,6 +193,14 @@
                 break;
             case MessageComposeResultSent:
                 NSLog(@"SMS sent it");
+                NSError *error;
+                if (![[GANTracker sharedTracker] trackEvent:@"phone_sms"
+                                                     action:@"sms_some_one"
+                                                      label:@"sms"
+                                                      value:-1
+                                                  withError:&error]) {
+                    NSLog(@"Error:%@", [error description]);
+                }
                 break;
             case MessageComposeResultFailed:
                 [Utils warningNotification:@"短信发送失败"];
