@@ -36,14 +36,14 @@
         self.selectedBackgroundView = sbv;
         [sbv release];
         
-        self.title = [[[UILabel alloc] initWithFrame:CGRectMake(12, 12, 250, 14)] autorelease];
+        self.title = [[[UILabel alloc] initWithFrame:CGRectMake(12, 12, 280, 14)] autorelease];
         self.title.backgroundColor = [UIColor clearColor];
         self.title.font = [UIFont systemFontOfSize:14.0f];
         self.textLabel.textAlignment = UITextAlignmentLeft;
         
         [self.contentView addSubview:self.title];
         
-        self.subTitle = [[[UILabel alloc] initWithFrame:CGRectMake(12, 30, 250, 12)] autorelease];
+        self.subTitle = [[[UILabel alloc] initWithFrame:CGRectMake(12, 30, 280, 12)] autorelease];
         self.subTitle.backgroundColor = [UIColor clearColor];
         self.subTitle.font = [UIFont systemFontOfSize:12.0f];
         self.subTitle.textColor = [UIColor colorWithRed:153/255.0 

@@ -11,13 +11,11 @@
 #import "JZEntryDetailViewController.h"
 #import "ASIHTTPRequest.h"
 #import "Utils.h"
-#import "Config.h"
 #import "SBJson.h"
 #import "LocationController.h"
 #import "JZEntryCell.h"
 #import "NSString+URLEncoding.h"
 #import "UIViewController+msg.h"
-#import "GANTracker.h"
 
 @interface JZEntryListViewController ()
 - (void)fetchEntryList:(NSString *) urlStr;
@@ -106,6 +104,21 @@
     // e.g. self.myOutlet = nil;
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+
+    [MobClick beginLogPageView:@"JZEntryListViewController"];
+    
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [MobClick endLogPageView:@"JZEntryListViewController"];
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
@@ -159,12 +172,6 @@
     [self.navigationController pushViewController:detailViewController animated:YES];
     [detailViewController release];
     
-    NSError *error;
-    if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/entry_%@", [entry objectForKey:@"id"]]
-                                         withError:&error]) {
-        NSLog(@"%@", [error description]);
-    }
-     
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -312,7 +319,7 @@
         [self.tableView reloadData];
 
         if ([[collection objectForKey:@"total"] intValue] == 0) {
-            [self fadeInMsgWithText:@"你所在城市暂无此类信息" rect:CGRectMake(0, 0, 160, 70)];
+            [self fadeInMsgWithText:@"你所在城市暂无此类信息" rect:CGRectMake(0, 0, 200, 70)];
         }
         
         

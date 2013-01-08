@@ -5,7 +5,7 @@
 	<key>banjia</key>
 	<dict>
 		<key>no</key>
-		<string>1</string>
+		<integer>1</integer>
 		<key>label</key>
 		<string>banjia</string>
 		<key>logo</key>
@@ -16,7 +16,7 @@
 	<key>jiadianweixiu</key>
 	<dict>
 		<key>no</key>
-		<string>2</string>
+		<integer>2</integer>
 		<key>label</key>
 		<string>jiadianweixiu</string>
 		<key>logo</key>
@@ -27,7 +27,7 @@
 	<key>kongtiaoyiji</key>
 	<dict>
 		<key>no</key>
-		<string>3</string>
+		<integer>3</integer>
 		<key>label</key>
 		<string>kongtiaoyiji</string>
 		<key>logo</key>
@@ -38,7 +38,7 @@
 	<key>guandaoshutong</key>
 	<dict>
 		<key>no</key>
-		<string>4</string>
+		<integer>4</integer>
 		<key>label</key>
 		<string>guandaoshutong</string>
 		<key>logo</key>
@@ -49,7 +49,7 @@
 	<key>kaisuo</key>
 	<dict>
 		<key>no</key>
-		<string>5</string>
+		<integer>5</integer>
 		<key>label</key>
 		<string>kaisuo</string>
 		<key>logo</key>
@@ -60,7 +60,7 @@
 	<key>yuesao</key>
 	<dict>
 		<key>no</key>
-		<string>6</string>
+		<integer>6</integer>
 		<key>label</key>
 		<string>yuesao</string>
 		<key>logo</key>
@@ -71,7 +71,7 @@
 	<key>zhongidangong</key>
 	<dict>
 		<key>no</key>
-		<string>7</string>
+		<integer>7</integer>
 		<key>label</key>
 		<string>zhongdiangong</string>
 		<key>logo</key>
@@ -82,7 +82,7 @@
 	<key>xiudiannao</key>
 	<dict>
 		<key>no</key>
-		<string>8</string>
+		<integer>8</integer>
 		<key>label</key>
 		<string>xiudiannao</string>
 		<key>logo</key>

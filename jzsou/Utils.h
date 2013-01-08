@@ -18,6 +18,6 @@
 
 
 + (NSURL *)partURI: (NSString *)uri queryString: (NSString *) query;
-
++ (void)updateCounterFor:(NSString *)uri counter:(NSString *)counterName;
 
 @end

@@ -5,7 +5,7 @@
 	<key>hangzhou</key>
 	<dict>
 		<key>no</key>
-		<string>1</string>
+		<integer>1</integer>
 		<key>label</key>
 		<string>hangzhou</string>
 		<key>name</key>
@@ -14,7 +14,7 @@
 	<key>shanghai</key>
 	<dict>
 		<key>no</key>
-		<string>2</string>
+		<integer>2</integer>
 		<key>label</key>
 		<string>shanghai</string>
 		<key>name</key>
@@ -23,11 +23,218 @@
 	<key>nanjing</key>
 	<dict>
 		<key>no</key>
-		<string>3</string>
+		<integer>3</integer>
 		<key>label</key>
 		<string>nanjing</string>
 		<key>name</key>
 		<string>南京</string>
+	</dict>
+	<key>beijing</key>
+	<dict>
+		<key>no</key>
+		<integer>4</integer>
+		<key>label</key>
+		<string>beijing</string>
+		<key>name</key>
+		<string>北京</string>
+	</dict>
+	<key>shenzhen</key>
+	<dict>
+		<key>no</key>
+		<integer>5</integer>
+		<key>label</key>
+		<string>shenzhen</string>
+		<key>name</key>
+		<string>深圳</string>
+	</dict>
+	<key>guangzhou</key>
+	<dict>
+		<key>no</key>
+		<integer>6</integer>
+		<key>label</key>
+		<string>guangzhou</string>
+		<key>name</key>
+		<string>广州</string>
+	</dict>
+	<key>chengdu</key>
+	<dict>
+		<key>no</key>
+		<integer>7</integer>
+		<key>label</key>
+		<string>chengdu</string>
+		<key>name</key>
+		<string>成都</string>
+	</dict>
+	<key>tianjin</key>
+	<dict>
+		<key>no</key>
+		<integer>8</integer>
+		<key>label</key>
+		<string>tianjin</string>
+		<key>name</key>
+		<string>天津</string>
+	</dict>
+	<key>chongqing</key>
+	<dict>
+		<key>no</key>
+		<integer>9</integer>
+		<key>label</key>
+		<string>chongqing</string>
+		<key>name</key>
+		<string>重庆</string>
+	</dict>
+	<key>fuzhou</key>
+	<dict>
+		<key>no</key>
+		<integer>10</integer>
+		<key>label</key>
+		<string>fuzhou</string>
+		<key>name</key>
+		<string>福州</string>
+	</dict>
+	<key>xiamen</key>
+	<dict>
+		<key>no</key>
+		<string>11</string>
+		<key>label</key>
+		<string>xiamen</string>
+		<key>name</key>
+		<string>厦门</string>
+	</dict>
+	<key>zhuhai</key>
+	<dict>
+		<key>no</key>
+		<integer>12</integer>
+		<key>label</key>
+		<string>zhuhai</string>
+		<key>name</key>
+		<string>珠海</string>
+	</dict>
+	<key>qingdao</key>
+	<dict>
+		<key>no</key>
+		<integer>13</integer>
+		<key>label</key>
+		<string>qingdao</string>
+		<key>name</key>
+		<string>青岛</string>
+	</dict>
+	<key>wuhan</key>
+	<dict>
+		<key>no</key>
+		<integer>14</integer>
+		<key>label</key>
+		<string>wuhan</string>
+		<key>name</key>
+		<string>武汉</string>
+	</dict>
+	<key>jinan</key>
+	<dict>
+		<key>no</key>
+		<integer>15</integer>
+		<key>label</key>
+		<string>jinan</string>
+		<key>name</key>
+		<string>济南</string>
+	</dict>
+	<key>shenyang</key>
+	<dict>
+		<key>no</key>
+		<integer>16</integer>
+		<key>label</key>
+		<string>shenyang</string>
+		<key>name</key>
+		<string>沈阳</string>
+	</dict>
+	<key>suzhou</key>
+	<dict>
+		<key>no</key>
+		<integer>17</integer>
+		<key>label</key>
+		<string>suzhou</string>
+		<key>name</key>
+		<string>苏州</string>
+	</dict>
+	<key>ningbo</key>
+	<dict>
+		<key>no</key>
+		<integer>18</integer>
+		<key>label</key>
+		<string>ningbo</string>
+		<key>name</key>
+		<string>宁波</string>
+	</dict>
+	<key>hefei</key>
+	<dict>
+		<key>no</key>
+		<integer>19</integer>
+		<key>label</key>
+		<string>hefei</string>
+		<key>name</key>
+		<string>合肥</string>
+	</dict>
+	<key>haerbin</key>
+	<dict>
+		<key>no</key>
+		<integer>20</integer>
+		<key>label</key>
+		<string>haerbin</string>
+		<key>name</key>
+		<string>哈尔滨</string>
+	</dict>
+	<key>haikou</key>
+	<dict>
+		<key>no</key>
+		<integer>24</integer>
+		<key>label</key>
+		<string>haikou</string>
+		<key>name</key>
+		<string>海口</string>
+	</dict>
+	<key>kunming</key>
+	<dict>
+		<key>no</key>
+		<integer>25</integer>
+		<key>label</key>
+		<string>kunming</string>
+		<key>name</key>
+		<string>昆明</string>
+	</dict>
+	<key>foshan</key>
+	<dict>
+		<key>no</key>
+		<integer>22</integer>
+		<key>label</key>
+		<string>foshan</string>
+		<key>name</key>
+		<string>佛山</string>
+	</dict>
+	<key>dalian</key>
+	<dict>
+		<key>no</key>
+		<integer>21</integer>
+		<key>label</key>
+		<string>dalian</string>
+		<key>name</key>
+		<string>大连</string>
+	</dict>
+	<key>changsha</key>
+	<dict>
+		<key>no</key>
+		<integer>23</integer>
+		<key>label</key>
+		<string>changsha</string>
+		<key>name</key>
+		<string>长沙</string>
+	</dict>
+	<key>xian</key>
+	<dict>
+		<key>no</key>
+		<integer>26</integer>
+		<key>label</key>
+		<string>xian</string>
+		<key>name</key>
+		<string>西安</string>
 	</dict>
 </dict>
 </plist>

@@ -13,7 +13,6 @@
 #import "LocationController.h"
 #import "ASIHTTPRequest.h"
 #import "Utils.h"
-#import "Config.h"
 #import "SBJson.h"
 
 @interface JZCateListViewController ()
@@ -157,6 +156,15 @@
         [self setButtonTitle:[self.currentCity objectForKey:@"name"]];
     }
     
+    [MobClick beginLogPageView:@"JZCateListViewController"];
+    
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [MobClick endLogPageView:@"JZCateListViewController"];
 }
 
 -(void)setButtonTitle:(NSString *)title

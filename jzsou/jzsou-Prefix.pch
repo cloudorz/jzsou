@@ -11,4 +11,17 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
+    #import "MobClick.h"
+#endif
+
+
+#ifndef JZ_Config_h
+#define JZ_Config_h
+
+// new
+#define HOST @"http://api.jiazhengsou.com"
+#define LOCHOST @"http://l.n2u.in"
+
+#define TOKEN @"0b8b31819a8d4c1a8da9e19847dcb36a"
+
 #endif

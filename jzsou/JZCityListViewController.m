@@ -10,7 +10,6 @@
 #import "CustomBarButtonItem.h"
 #import "LocationController.h"
 #import "Utils.h"
-#import "Config.h"
 #import "ASIHTTPRequest.h"
 #import "SBJson.h"
 
@@ -108,6 +107,21 @@
 {
     [super viewDidAppear:animated];
     [self fakeGetLocation];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [MobClick beginLogPageView:@"JZCityListViewController"];
+    
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [MobClick endLogPageView:@"JZCityListViewController"];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

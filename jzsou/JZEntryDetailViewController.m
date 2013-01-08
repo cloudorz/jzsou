@@ -9,7 +9,7 @@
 #import "JZEntryDetailViewController.h"
 #import "CustomBarButtonItem.h"
 #import "Utils.h"
-#import "GANTracker.h"
+#import "UIViewController+msg.h"
 
 @interface JZEntryDetailViewController ()
 
@@ -30,6 +30,8 @@
 @synthesize smsButton=_smsButton;
 @synthesize callButton=_callButton;
 @synthesize entry=_entry;
+@synthesize popview=_popview;
+@synthesize feedview=_feedview;
 
 - (void)dealloc
 {
@@ -44,6 +46,7 @@
     [_callButton release];
     [_smsButton release];
     [_entry release];
+    [_popview release];
     [super dealloc];
 }
 
@@ -65,6 +68,8 @@
                                              action:@selector(backAction:) 
                                              title:@"返回"] autorelease];
     self.navigationItem.title = @"详细";
+    
+
     
 }
 
@@ -107,11 +112,69 @@
             self.smsButton.enabled = YES;
         }
     } 
+    
+     [MobClick beginLogPageView:@"JZEntryDetailViewController"];
+}
+
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [MobClick endLogPageView:@"JZEntryDetailViewController"];
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    // one click on detail
+    [MobClick event:@"look" label:[self.entry objectForKey:@"id"] acc:1];
+    [Utils updateCounterFor:[self.entry objectForKey:@"link"] counter:@"c_click"];
 }
 
 - (void)backAction:(id)sender
 {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+-(void)dimissPop
+{
+    [self.popview dismiss:YES];
+    self.popview = nil;
+}
+
+- (IBAction)feedbackAction:(id)sender
+{
+
+    //the controller we want to present as a popover
+    if (self.popview == nil) {
+        self.popview = [[SNPopupView alloc] initWithContentView:self.feedview contentSize:CGSizeMake(72, 93)];
+        [self.popview addTarget:self action:@selector(didTouchPopupView:)];
+        [self.popview setDelegate:self];
+        [self.popview showFromBarButtonItemCustomView:sender inView:self.view animated:YES];
+    } else {
+        [self dimissPop];
+    }
+
+}
+
+- (void)didTouchPopupView:(SNPopupView*)sender {
+	NSLog(@"%@", sender);
+}
+
+- (void)didDismissModal:(SNPopupView*)popupview {
+	
+	if (popupview == self.popview) {
+		self.popview = nil;
+	}
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+//	UITouch *touch = [touches anyObject];
+    
+    [self dimissPop];
+
+
 }
 
 - (IBAction)smsTrigger:(id)sender
@@ -134,17 +197,10 @@
 
     UIDevice *device = [UIDevice currentDevice];
     if ([[device model] isEqualToString:@"iPhone"]) {
-        NSError *error;
-        if (![[GANTracker sharedTracker] trackEvent:@"phone_call"
-                                             action:@"call_some_one"
-                                              label:@"call"
-                                              value:-1
-                                          withError:&error]) {
-            NSLog(@"Error:%@", [error description]);
-        }
-        
+
         NSURL *callURL = [NSURL URLWithString:[NSString stringWithFormat:@"tel:%@", self.phone.text]];
-        
+        [Utils updateCounterFor:[self.entry objectForKey:@"link"] counter:@"c_call"];
+        [MobClick event:@"call" label:[self.entry objectForKey:@"id"] acc:1];
         [[UIApplication sharedApplication] openURL:callURL];
     } else {
         [Utils warningNotification:@"设备没有电话功能"];
@@ -193,14 +249,8 @@
                 break;
             case MessageComposeResultSent:
                 NSLog(@"SMS sent it");
-                NSError *error;
-                if (![[GANTracker sharedTracker] trackEvent:@"phone_sms"
-                                                     action:@"sms_some_one"
-                                                      label:@"sms"
-                                                      value:-1
-                                                  withError:&error]) {
-                    NSLog(@"Error:%@", [error description]);
-                }
+                [MobClick event:@"sms" label:[self.entry objectForKey:@"id"] acc:1];
+                [Utils updateCounterFor:[self.entry objectForKey:@"link"] counter:@"c_sms"];
                 break;
             case MessageComposeResultFailed:
                 [Utils warningNotification:@"短信发送失败"];
@@ -209,6 +259,29 @@
                 break;
     }
     [controller dismissModalViewControllerAnimated:YES];
+}
+
+#pragma  feedback action
+-(IBAction)goodActions:(id)sender
+{
+    [Utils updateCounterFor:[self.entry objectForKey:@"link"] counter:@"c_good"];
+    [self dimissPop];
+    [self fadeOutMsgWithText:@"谢谢反馈" rect:CGRectMake(0, 0, 90, 50)];
+
+}
+
+-(IBAction)badActions:(id)sender
+{
+    [Utils updateCounterFor:[self.entry objectForKey:@"link"] counter:@"c_bad"];
+    [self dimissPop];
+    [self fadeOutMsgWithText:@"谢谢反馈" rect:CGRectMake(0, 0, 90, 50)];
+}
+
+-(IBAction)emptyActions:(id)sender
+{
+    [Utils updateCounterFor:[self.entry objectForKey:@"link"] counter:@"c_empty"];
+    [self dimissPop];
+    [self fadeOutMsgWithText:@"谢谢反馈" rect:CGRectMake(0, 0, 90, 50)];
 }
 
 @end

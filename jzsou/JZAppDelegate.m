@@ -7,17 +7,15 @@
 //
 
 #import "JZAppDelegate.h"
-#import "GANTracker.h"
+#import "iVersion.h"
 
 @implementation JZAppDelegate
 
 @synthesize window = _window;
 
-static const NSInteger kGANDispatchPeriodSec = 10;
 
 - (void)dealloc
 {
-    [[GANTracker sharedTracker] stopTracker];
     [_window release];
     [super dealloc];
 }
@@ -27,19 +25,8 @@ static const NSInteger kGANDispatchPeriodSec = 10;
 //    self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     // Override point for customization after application launch.
 //    self.window.backgroundColor = [UIColor whiteColor];
-
-    [[GANTracker sharedTracker] startTrackerWithAccountID:@"UA-30676177-1"
-                                           dispatchPeriod:kGANDispatchPeriodSec
-                                                 delegate:nil];
-    
-    NSError *error;
-    if (![[GANTracker sharedTracker] setCustomVariableAtIndex:1
-                                                         name:@"iPhone4"
-                                                        value:[[UIDevice currentDevice] uniqueIdentifier]
-                                                    withError:&error]) {
-        // Handle error here
-    }
-    
+    [MobClick startWithAppkey:@"4ffe5183527015706900005f" reportPolicy:REALTIME channelId:nil];
+    [MobClick updateOnlineConfig];
     [self.window makeKeyAndVisible];
     return YES;
 }

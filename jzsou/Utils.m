@@ -7,7 +7,8 @@
 //
 
 #import "Utils.h"
-
+#import "ASIHTTPRequest.h"
+#import "SBJson.h"
 
 @implementation Utils
 
@@ -65,6 +66,40 @@
     [fill release];
     
     return fullURI;
+}
+
++ (void)updateCounterFor:(NSString *)uri counter:(NSString *)counterName
+{
+
+    __block ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:
+                                       [NSURL URLWithString:[NSString stringWithFormat:@"%@?f=%@", uri, counterName]]
+                                       ];
+    NSDictionary *content = [NSDictionary  dictionaryWithObjectsAndKeys:
+                             [[[UIDevice currentDevice] uniqueIdentifier] description], counterName, 
+                             nil];
+
+    [request appendPostData:[[content JSONRepresentation] dataUsingEncoding:NSUTF8StringEncoding]];
+    [request addRequestHeader:@"Content-Type" value:@"Application/json;charset=utf-8"];
+    [request addRequestHeader:@"Authorization" value:TOKEN];
+    [request setRequestMethod:@"PUT"];
+        
+    [request setCompletionBlock:^{
+        // Use when fetching text data
+        
+        NSInteger code = [request responseStatusCode];
+        if (code != 200) {
+            NSLog(@"update counter error");
+        }
+        
+    }];
+    
+    [request setFailedBlock:^{
+        NSError *error = [request error];
+        NSLog(@"Fetch avatar: %@", [error localizedDescription]);
+
+    }];
+
+    [request startAsynchronous];
 }
 
 #pragma mark - distance info
